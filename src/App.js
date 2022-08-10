@@ -18,6 +18,11 @@ export const TrelloCloneContext = React.createContext(initialState)
 function App() {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const value = { state, dispatch }
+
+  React.useEffect(() => {
+    fetch('/users').then(res => res.json()).then(response => {dispatch({type: 'FETCH_USERS', payload: response})})
+  }, [])
+
   return (
     <>
       <ThemeProvider theme={theme}>

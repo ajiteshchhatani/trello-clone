@@ -1,12 +1,19 @@
 export const initialState = {
     workspace: [],
-    sampleArr: [],
-    bucket: []
+    bucket: [],
+    tasks: [],
+    user: []
 }
 
 export const reducer = (state, action) => {
-    //console.log("reducer")
     switch(action.type) {
+        case 'FETCH_USERS': {
+            //console.log(action.payload)
+            return {
+                ...state,
+                user: action.payload
+            }
+        }
         case 'ADD_WORKSPACE': {
             return {
                 ...state,
@@ -17,13 +24,20 @@ export const reducer = (state, action) => {
             }
         }
         case 'ADD_BUCKET': {
-            console.log("payload", action.payload)
-            console.log("state", state);
-            console.log("state.bucket", state.bucket)
             return {
                 ...state,
                 bucket: [
                     ...state.bucket,
+                    action.payload
+                ]
+            }
+        }
+        case 'ADD_TASK': {
+            console.log("add task payload", action.payload)
+            return {
+                ...state,
+                tasks: [
+                    ...state.tasks,
                     action.payload
                 ]
             }

@@ -13,7 +13,7 @@ function WorkspaceList() {
     const { state } = React.useContext(TrelloCloneContext);
 
     React.useEffect(() => {
-        console.log(state.workspace);
+        //console.log(state.workspace);
         setList(state.workspace)
     }, [state])
 

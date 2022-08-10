@@ -8,10 +8,10 @@ html, body {
 
 .App {
   display: flex;
-  text-align: center;
 }
 
 .sidebar {
+  text-align: center;
   background-color: lightgray;
   width: 3em;
   height: 100vh;
@@ -38,17 +38,28 @@ html, body {
 
 .button-create-bucket {
   align-self: flex-end;
-  margin: 2em;
 }
 
 .bucket-list-container {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .bucket {
+  position: relative;
   flex: 1 0 auto;
+  margin: 1rem;
+  max-width: 20rem;
+  min-height: 30rem;
+  text-align: center;
 }
 
 .bucket-description {
   display: block;
+}
+
+.button-create-task {
+  position: absolute;
+  right: 1.5em;
+  bottom: 1rem;
 }

@@ -3,14 +3,19 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem'
 import { Alert, Button, DialogContent, Snackbar } from '@mui/material';
 import { TrelloCloneContext } from '../App';
 
 
-function AddItem({ isOpen, handleCloseDialog, itemToAdd, id }) {
+function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [name, setName] = React.useState('');
     const [bucketDescription, setBucketDescription] = React.useState('')
+    const [taskDescription, setTaskDescription] = React.useState('')
+    const [taskUser, setTaskUser] = React.useState('')
     const { dispatch } = React.useContext(TrelloCloneContext)
 
     const handleClose = () => {
@@ -23,6 +28,14 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id }) {
 
     const handleDescriptionChange = event => {
         setBucketDescription(event.target.value)
+    }
+
+    const handleTaskDescriptionChange = event => {
+        setTaskDescription(event.target.value)
+    }
+
+    const handleTaskUserChange = event => {
+        setTaskUser(event.target.value)
     }
 
     const handleSnackbarOpen = () => {
@@ -43,7 +56,7 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(res => res.json()).then(data => {return data})
+        }).then(res => res.json()).then(data => { return data })
         return response;
     }
 
@@ -53,14 +66,14 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id }) {
                 (response) => {
                     handleSnackbarOpen()
                     //setTimeout(shouldFetchAfterPost(true), 2000);
-                    dispatch({type: "ADD_WORKSPACE", payload: response})
+                    dispatch({ type: "ADD_WORKSPACE", payload: response })
                 },
                 (error) => {
                     console.error(error)
                 }
             )
         }
-        else {
+        if (itemToAdd.toLowerCase() === 'bucket') {
             postItemDataAsync('/bucket', {
                 bucketName: name,
                 bucketDescription: bucketDescription,
@@ -69,7 +82,25 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id }) {
                 (response) => {
                     handleSnackbarOpen()
                     //setTimeout(shouldFetchAfterPost(true), 2000);
-                    dispatch({type: "ADD_BUCKET", payload: response})
+                    dispatch({ type: "ADD_BUCKET", payload: response })
+                },
+                (error) => {
+                    console.error(error)
+                }
+            )
+        }
+        if (itemToAdd.toLowerCase() === 'task') {
+            postItemDataAsync('/task', {
+                taskName: name,
+                taskDescription: taskDescription,
+                //taskDate: String,
+                assignedTo: taskUser,
+                taskBucket: id
+            }).then(
+                (response) => {
+                    handleSnackbarOpen()
+                    //setTimeout(shouldFetchAfterPost(true), 2000);
+                    dispatch({ type: "ADD_TASK", payload: response })
                 },
                 (error) => {
                     console.error(error)
@@ -85,7 +116,28 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id }) {
                 <DialogContent>
                     <Input autoFocus placeholder={`${itemToAdd} name`} aria-label={`${itemToAdd} name`} onChange={handleNameChange} />
                     {
-                        itemToAdd.toLowerCase() === 'bucket' ? <Input multiline className='bucket-description' placeholder='Bucket description' maxRows={4} aria-label='Bucket description' onChange={handleDescriptionChange} /> : null                            
+                        itemToAdd.toLowerCase() === 'bucket' ? <Input multiline className='bucket-description' placeholder='Bucket description' maxRows={4} aria-label='Bucket description' onChange={handleDescriptionChange} /> : null
+                    }
+                    {
+                        itemToAdd.toLowerCase() === 'task' ?
+                            <>
+                                <Input multiline className='task-description' placeholder='Task description' maxRows={4} aria-label='Task description' onChange={handleTaskDescriptionChange} />
+                                <InputLabel id='userAssignedTo'>Assigned To:</InputLabel>
+                                <Select 
+                                    labelId='userAssignedTo'
+                                    id='userAssignedToSelect'
+                                    value={taskUser}
+                                    label="Assigned To"
+                                    onChange={handleTaskUserChange}
+                                >
+                                    {
+                                        users.map((user) => (
+                                            <MenuItem key={user.id} value={user.id}>{user.userName}</MenuItem>
+                                        ))
+                                    }
+                                </Select>
+                            </>
+                            : null
                     }
                 </DialogContent>
                 <DialogActions>

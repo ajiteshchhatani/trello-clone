@@ -25,7 +25,9 @@ export const db = factory({
         id: primaryKey(uuidv4),
         taskName: String,
         taskDescription: String,
-        taskBucket: oneOf('bucket')
+        assignedTo: oneOf('user'),
+        //taskDate: String,
+        taskBucket: oneOf('bucket'),
     },
     user: {
         id: primaryKey(uuidv4),
@@ -43,7 +45,7 @@ const generateUser = () => {
 
 const getIconStringForDisplay = () => {
     const index = Math.floor(Math.random() * (iconArray.length + 1));
-    console.log("index", index);
+    //console.log("index", index);
     return iconArray[index]
 }
 
@@ -54,6 +56,12 @@ for(let i = 0; i < 2; i++) {
 const serializeBucket = (bucket) => ({
     ...bucket,
     workspace: bucket.workspace.id
+})
+
+const serializeTask = (task) => ({
+    ...task,
+    assignedTo: task.assignedTo.id,
+    taskBucket: task.taskBucket.id
 })
 
 export const handlers = [
@@ -68,7 +76,7 @@ export const handlers = [
         const data = req.body
         data.icon = getIconStringForDisplay();
         const workspace = db.workspace.create(data)
-        console.log(workspace);
+        //console.log(workspace);
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -86,11 +94,20 @@ export const handlers = [
 
     rest.post('/bucket', (req, res, ctx) => {
         const data = req.body
-        console.log("data", data);
+        //console.log("data", data);
         const workspace = db.workspace.findFirst({where : {id: {equals : data.workspace}}})
         data.workspace = workspace
         const bucket = db.bucket.create(data)
         console.log(serializeBucket(bucket));
+        //workspace.buckets = bucket //Linking bucket to workspace
+        db.workspace.update({
+            where: {
+                id: {equals: data.workspace}
+            },
+            data: {
+                buckets: bucket
+            }
+        })
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -103,6 +120,22 @@ export const handlers = [
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
             ctx.json(db.bucket.getAll())
+        )
+    }),
+
+    rest.post('/task', (req, res, ctx) => {
+        const data = req.body
+        const bucket = db.bucket.findFirst({where : {id: {equals : data.taskBucket}}})
+        const user = db.user.findFirst({where: {id: {equals: data.assignedTo}}})
+        data.taskBucket = bucket;
+        data.assignedTo = user;
+        const task = db.task.create(data)
+        console.log(serializeTask(task));
+        //workspace.buckets = bucket //Linking bucket to workspace
+        return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
+            ctx.status(200),
+            ctx.json(serializeTask(task))
         )
     })
 ]

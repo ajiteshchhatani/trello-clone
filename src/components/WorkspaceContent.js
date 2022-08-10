@@ -3,6 +3,17 @@ import { useParams } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import BucketList from './BucketList';
 import AddItem from './AddItem';
+import { styled } from '@mui/material/styles'
+
+const styles = {
+    root: {
+        margin: '1em'
+    }
+}
+
+const CustomButton = styled(Button)`
+    margin: 1em
+`
 
 function WorkspaceContent() {
     const params = useParams();
@@ -13,8 +24,16 @@ function WorkspaceContent() {
     }
     return (
         <div className='workspace-details-container'>
-            <p>Here into Workspace {params.id} after clicking on link</p>
-            <Button variant='contained' className='button-create-bucket theme-button' onClick={handleItemDialogOpen}>Create Bucket</Button>
+            <Button 
+                variant='contained' 
+                className='button-create-bucket theme-button' 
+                onClick={handleItemDialogOpen}
+                sx={{
+                    m: "1rem"
+                }}
+                >
+                    Create Bucket
+            </Button>
             <AddItem isOpen={open} handleCloseDialog={() => setOpen(false)} itemToAdd='bucket' id={params.id} />
             <BucketList />
         </div>
