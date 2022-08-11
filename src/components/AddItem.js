@@ -116,14 +116,36 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                 <DialogContent>
                     <Input autoFocus placeholder={`${itemToAdd} name`} aria-label={`${itemToAdd} name`} onChange={handleNameChange} />
                     {
-                        itemToAdd.toLowerCase() === 'bucket' ? <Input multiline className='bucket-description' placeholder='Bucket description' maxRows={4} aria-label='Bucket description' onChange={handleDescriptionChange} /> : null
+                        itemToAdd.toLowerCase() === 'bucket' ?
+                            <Input
+                                multiline
+                                className='bucket-description'
+                                placeholder='Bucket description'
+                                maxRows={4}
+                                aria-label='Bucket description'
+                                onChange={handleDescriptionChange}
+                                sx={{
+                                    display: 'block'
+                                }}
+                            />
+                            : null
                     }
                     {
                         itemToAdd.toLowerCase() === 'task' ?
                             <>
-                                <Input multiline className='task-description' placeholder='Task description' maxRows={4} aria-label='Task description' onChange={handleTaskDescriptionChange} />
+                                <Input 
+                                    multiline 
+                                    className='task-description' 
+                                    placeholder='Task description' 
+                                    maxRows={4} 
+                                    aria-label='Task description' 
+                                    onChange={handleTaskDescriptionChange}
+                                    sx={{
+                                        display: 'block'
+                                    }} 
+                                />
                                 <InputLabel id='userAssignedTo'>Assigned To:</InputLabel>
-                                <Select 
+                                <Select
                                     labelId='userAssignedTo'
                                     id='userAssignedToSelect'
                                     value={taskUser}

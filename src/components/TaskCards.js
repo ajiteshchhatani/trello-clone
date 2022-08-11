@@ -2,6 +2,7 @@ import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent'
 import { CardActionArea } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { TrelloCloneContext } from '../App';
 
 function TaskCards({tasks}) {
@@ -13,12 +14,12 @@ function TaskCards({tasks}) {
     }
     return (
         tasks.map(task => (
-            <Card key={task.id} className="task-card" sx={{width: '300px', padding: '0 10px'}}>
+            <Card key={task.id} className="task-card" variant='outlined'>
                 <CardActionArea>
                     <CardContent>
-                        <h3>{task.taskName}</h3>
-                        <h4>{task.taskDescription}</h4>
-                        <h5>AssignedTo: {getUserForTask(task.assignedTo)}</h5>
+                        <Typography variant='subtitle1'>{task.taskName}</Typography>
+                        <Typography variant='body1'>{task.taskDescription}</Typography>
+                        <Typography variant='body1'>AssignedTo: {getUserForTask(task.assignedTo)}</Typography>
                     </CardContent>
                 </CardActionArea>
             </Card>

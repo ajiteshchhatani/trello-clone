@@ -2,6 +2,7 @@ import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import { TrelloCloneContext } from '../App';
 import BucketContent from './BucketContent';
+import Typography from '@mui/material/Typography';
 
 function BucketList() {
 
@@ -19,8 +20,8 @@ function BucketList() {
                     {
                         buckets.map((bucket) => (
                             <Paper key={bucket.id} elevation={8} className="bucket">
-                                <h3>{bucket.bucketName}</h3>
-                                <h4>{bucket.bucketDescription}</h4>
+                                <Typography variant='h5'>{bucket.bucketName}</Typography>
+                                <Typography variant='h6'>{bucket.bucketDescription}</Typography>
                                 <BucketContent bucketId={bucket.id} />
                             </Paper>
                         ))

@@ -3,17 +3,6 @@ import { useParams } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import BucketList from './BucketList';
 import AddItem from './AddItem';
-import { styled } from '@mui/material/styles'
-
-const styles = {
-    root: {
-        margin: '1em'
-    }
-}
-
-const CustomButton = styled(Button)`
-    margin: 1em
-`
 
 function WorkspaceContent() {
     const params = useParams();
@@ -24,9 +13,10 @@ function WorkspaceContent() {
     }
     return (
         <div className='workspace-details-container'>
-            <Button 
-                variant='contained' 
-                className='button-create-bucket theme-button' 
+            <Button
+                variant='contained'
+                color='primary'
+                className='button-create-bucket' 
                 onClick={handleItemDialogOpen}
                 sx={{
                     m: "1rem"

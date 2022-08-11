@@ -54,12 +54,14 @@ html, body {
   text-align: center;
 }
 
-.bucket-description {
-  display: block;
-}
-
 .button-create-task {
   position: absolute;
   right: 1.5em;
   bottom: 1rem;
+}
+
+.task-card {
+  width: 19em;
+  margin: 0.5em;
+  text-align: unset;
 }
