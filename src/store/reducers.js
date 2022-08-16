@@ -33,13 +33,20 @@ export const reducer = (state, action) => {
             }
         }
         case 'ADD_TASK': {
-            console.log("add task payload", action.payload)
+            //console.log("add task payload", action.payload)
             return {
                 ...state,
                 tasks: [
                     ...state.tasks,
                     action.payload
                 ]
+            }
+        }
+        case 'UPDATE_TASK_BUCKET': {
+            const taskToUpdate = state.tasks.map((task) => task.id === action.payload.id ? { ...task, taskBucket: action.payload.taskBucket }: task)
+            return {
+                ...state,
+                tasks: taskToUpdate
             }
         }
         default:

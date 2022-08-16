@@ -24,7 +24,7 @@ function App() {
   const value = { state, dispatch }
 
   React.useEffect(() => {
-    fetch('/users').then(res => res.json()).then(response => {dispatch({type: 'FETCH_USERS', payload: response})})
+    fetch('/fakeApi/users').then(res => res.json()).then(response => {dispatch({type: 'FETCH_USERS', payload: response})})
   }, [])
 
   return (

@@ -45,7 +45,6 @@ const generateUser = () => {
 
 const getIconStringForDisplay = () => {
     const index = Math.floor(Math.random() * (iconArray.length + 1));
-    //console.log("index", index);
     return iconArray[index]
 }
 
@@ -65,18 +64,17 @@ const serializeTask = (task) => ({
 })
 
 export const handlers = [
-    rest.get('/users', (req, res, ctx) => {
+    rest.get('/fakeApi/users', (req, res, ctx) => {
         return res(
             ctx.status(200),
             ctx.json(db.user.getAll())
         )
     }),
 
-    rest.post('/workspace', (req, res, ctx) => {
+    rest.post('/fakeApi/workspace', (req, res, ctx) => {
         const data = req.body
         data.icon = getIconStringForDisplay();
         const workspace = db.workspace.create(data)
-        //console.log(workspace);
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -84,7 +82,7 @@ export const handlers = [
         )
     }),
 
-    rest.get('/workspace', (req, res, ctx) => {
+    rest.get('/fakeApi/workspace', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -92,13 +90,11 @@ export const handlers = [
         )
     }),
 
-    rest.post('/bucket', (req, res, ctx) => {
+    rest.post('/fakeApi/bucket', (req, res, ctx) => {
         const data = req.body
-        //console.log("data", data);
         const workspace = db.workspace.findFirst({where : {id: {equals : data.workspace}}})
         data.workspace = workspace
         const bucket = db.bucket.create(data)
-        console.log(serializeBucket(bucket));
         //workspace.buckets = bucket //Linking bucket to workspace
         db.workspace.update({
             where: {
@@ -115,7 +111,7 @@ export const handlers = [
         )
     }),
 
-    rest.get('/bucket', (req, res, ctx) => {
+    rest.get('/fakeApi/bucket', (req, res, ctx) => {
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
@@ -123,19 +119,42 @@ export const handlers = [
         )
     }),
 
-    rest.post('/task', (req, res, ctx) => {
+    rest.post('/fakeApi/task', (req, res, ctx) => {
         const data = req.body
         const bucket = db.bucket.findFirst({where : {id: {equals : data.taskBucket}}})
         const user = db.user.findFirst({where: {id: {equals: data.assignedTo}}})
         data.taskBucket = bucket;
         data.assignedTo = user;
         const task = db.task.create(data)
-        console.log(serializeTask(task));
         //workspace.buckets = bucket //Linking bucket to workspace
         return res(
             ctx.delay(ARTIFICIAL_DELAY_MS),
             ctx.status(200),
             ctx.json(serializeTask(task))
+        )
+    }),
+
+    rest.get('/fakeApi/task', (req, res, ctx) => {
+        return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
+            ctx.status(200),
+            ctx.json(db.task.getAll())
+        )
+    }),
+
+    rest.patch('/fakeApi/task/:taskId', (req, res, ctx) => {
+        const { taskBucket } = req.body;
+        const updatedBucket = db.bucket.findFirst({where : {id: {equals : taskBucket}}})
+        const updatedTask = db.task.update({
+            where: { id: { equals: req.params.taskId } },
+            data: {
+                taskBucket: updatedBucket
+            }
+        })
+        return res(
+            ctx.delay(ARTIFICIAL_DELAY_MS),
+            ctx.status(200),
+            ctx.json(serializeTask(updatedTask))
         )
     })
 ]

@@ -62,7 +62,7 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
 
     const handleCreate = () => {
         if (itemToAdd.toLowerCase() === 'workspace') {
-            postItemDataAsync('/workspace', { 'workspaceName': name }).then(
+            postItemDataAsync('/fakeApi/workspace', { 'workspaceName': name }).then(
                 (response) => {
                     handleSnackbarOpen()
                     //setTimeout(shouldFetchAfterPost(true), 2000);
@@ -74,7 +74,7 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
             )
         }
         if (itemToAdd.toLowerCase() === 'bucket') {
-            postItemDataAsync('/bucket', {
+            postItemDataAsync('/fakeApi/bucket', {
                 bucketName: name,
                 bucketDescription: bucketDescription,
                 workspace: id
@@ -90,7 +90,7 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
             )
         }
         if (itemToAdd.toLowerCase() === 'task') {
-            postItemDataAsync('/task', {
+            postItemDataAsync('/fakeApi/task', {
                 taskName: name,
                 taskDescription: taskDescription,
                 //taskDate: String,

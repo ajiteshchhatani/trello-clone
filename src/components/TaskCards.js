@@ -6,15 +6,19 @@ import Typography from '@mui/material/Typography';
 import { TrelloCloneContext } from '../App';
 
 function TaskCards({tasks}) {
-    //console.log("props tasks", tasks)
     const { state } = React.useContext(TrelloCloneContext);
     const getUserForTask = (assignedTo) => {
         const userForTask = state.user.find((u) => u.id === assignedTo)
         return userForTask.userName
     }
+
+    const handleTaskCardDrag = event => {
+        event.dataTransfer.dropEffect = "move";
+        event.dataTransfer.setData("text/plain", event.target.id)
+    }
     return (
         tasks.map(task => (
-            <Card key={task.id} className="task-card" variant='outlined'>
+            <Card key={task.id} id={task.id} className="task-card" variant='outlined' draggable="true" onDragStart={handleTaskCardDrag}>
                 <CardActionArea>
                     <CardContent>
                         <Typography variant='subtitle1'>{task.taskName}</Typography>
