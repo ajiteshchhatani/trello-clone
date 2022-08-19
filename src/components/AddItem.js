@@ -2,7 +2,7 @@ import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
-import Input from '@mui/material/Input';
+import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem'
@@ -114,10 +114,16 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
             <Dialog open={isOpen} onClose={handleClose}>
                 <DialogTitle>Create a {itemToAdd}!</DialogTitle>
                 <DialogContent>
-                    <Input autoFocus placeholder={`${itemToAdd} name`} aria-label={`${itemToAdd} name`} onChange={handleNameChange} />
+                    <TextField
+                        autoFocus
+                        placeholder={`${itemToAdd} name`} 
+                        aria-label={`${itemToAdd} name`} 
+                        onChange={handleNameChange}
+                    >
+                    </TextField>
                     {
                         itemToAdd.toLowerCase() === 'bucket' ?
-                            <Input
+                            <TextField
                                 multiline
                                 className='bucket-description'
                                 placeholder='Bucket description'
@@ -127,13 +133,13 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                                 sx={{
                                     display: 'block'
                                 }}
-                            />
+                            ></TextField>
                             : null
                     }
                     {
                         itemToAdd.toLowerCase() === 'task' ?
                             <>
-                                <Input 
+                                <TextField 
                                     multiline 
                                     className='task-description' 
                                     placeholder='Task description' 
@@ -143,7 +149,7 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                                     sx={{
                                         display: 'block'
                                     }} 
-                                />
+                                ></TextField>
                                 <InputLabel id='userAssignedTo'>Assigned To:</InputLabel>
                                 <Select
                                     labelId='userAssignedTo'
