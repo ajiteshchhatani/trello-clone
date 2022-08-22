@@ -18,8 +18,26 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
     const [taskUser, setTaskUser] = React.useState('')
     const { dispatch } = React.useContext(TrelloCloneContext)
 
+    const[disabled, setDisabled] = React.useState(true);
+
+    React.useEffect(() => {
+        if (itemToAdd.toLowerCase() === 'workspace') {
+            setDisabled(Boolean(!name))
+        }
+        else if (itemToAdd.toLowerCase() === 'bucket') {
+            setDisabled(Boolean(!name) || Boolean(!bucketDescription))
+        }
+        else {
+            setDisabled(Boolean(!name) || Boolean(!taskDescription) || Boolean(!taskUser))
+        }
+    }, [itemToAdd, name, bucketDescription, taskDescription, taskUser])
+
     const handleClose = () => {
         handleCloseDialog()
+        setName('')
+        setBucketDescription('')
+        setTaskDescription('')
+        setTaskUser('')
     }
 
     const handleNameChange = event => {
@@ -67,6 +85,7 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                     handleSnackbarOpen()
                     //setTimeout(shouldFetchAfterPost(true), 2000);
                     dispatch({ type: "ADD_WORKSPACE", payload: response })
+                    setName('');
                 },
                 (error) => {
                     console.error(error)
@@ -83,6 +102,8 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                     handleSnackbarOpen()
                     //setTimeout(shouldFetchAfterPost(true), 2000);
                     dispatch({ type: "ADD_BUCKET", payload: response })
+                    setName('')
+                    setBucketDescription('')
                 },
                 (error) => {
                     console.error(error)
@@ -101,6 +122,9 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                     handleSnackbarOpen()
                     //setTimeout(shouldFetchAfterPost(true), 2000);
                     dispatch({ type: "ADD_TASK", payload: response })
+                    setName('')
+                    setTaskDescription('')
+                    setTaskUser('')
                 },
                 (error) => {
                     console.error(error)
@@ -116,8 +140,8 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                 <DialogContent>
                     <TextField
                         autoFocus
-                        placeholder={`${itemToAdd} name`} 
-                        aria-label={`${itemToAdd} name`} 
+                        placeholder={`${itemToAdd} name`}
+                        aria-label={`${itemToAdd} name`}
                         onChange={handleNameChange}
                     >
                     </TextField>
@@ -139,16 +163,16 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                     {
                         itemToAdd.toLowerCase() === 'task' ?
                             <>
-                                <TextField 
-                                    multiline 
-                                    className='task-description' 
-                                    placeholder='Task description' 
-                                    maxRows={4} 
-                                    aria-label='Task description' 
+                                <TextField
+                                    multiline
+                                    className='task-description'
+                                    placeholder='Task description'
+                                    maxRows={4}
+                                    aria-label='Task description'
                                     onChange={handleTaskDescriptionChange}
                                     sx={{
                                         display: 'block'
-                                    }} 
+                                    }}
                                 ></TextField>
                                 <InputLabel id='userAssignedTo'>Assigned To:</InputLabel>
                                 <Select
@@ -169,7 +193,7 @@ function AddItem({ isOpen, handleCloseDialog, itemToAdd, id, users }) {
                     }
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCreate}>Create</Button>
+                    <Button onClick={handleCreate} disabled={disabled}>Create</Button>
                     <Button onClick={handleClose}>Cancel</Button>
                 </DialogActions>
             </Dialog>
